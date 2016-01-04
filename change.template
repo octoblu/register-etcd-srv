@@ -1,0 +1,15 @@
+{
+  "Changes": [
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "%RECORD%.%DOMAIN%.",
+        "Type": "SRV",
+        "TTL": 60,
+        "ResourceRecords": [
+          %VALUES%
+        ]
+      }
+    }
+  ]
+}

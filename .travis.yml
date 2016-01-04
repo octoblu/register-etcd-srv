@@ -1,0 +1,4 @@
+sudo: false
+language: shell
+script:
+  - exit 0
