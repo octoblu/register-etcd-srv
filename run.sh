@@ -10,6 +10,16 @@ if [ -z "${DOMAIN}" ]; then
   exit 1
 fi
 
+if [ -z "${EC2_FILTER}" ]; then
+  echo "Missing EC2_FILTER, exiting."
+  exit 1
+fi
+
+if [ -z "${AWS_DEFAULT_REGION}" ]; then
+  echo "Missing AWS_DEFAULT_REGION, exiting."
+  exit 1
+fi
+
 HOSTED_ZONE=$(aws route53 list-hosted-zones | jq -r ".HostedZones[] | select(.Name==\"${DOMAIN}.\") .Id")
 
 if [ -z "${HOSTED_ZONE}" ]; then
@@ -17,7 +27,7 @@ if [ -z "${HOSTED_ZONE}" ]; then
   exit 1
 fi
 
-ETCD_SERVERS=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=etcd-cluster" | jq -r '.Reservations[].Instances[].PrivateIpAddress' | grep -v null)
+ETCD_SERVERS=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${EC2_FILTER}" | jq -r '.Reservations[].Instances[].PrivateIpAddress' | grep -v null)
 
 VALUES=""
 for ETCD_SERVER in ${ETCD_SERVERS}; do
